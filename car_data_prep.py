@@ -14,8 +14,8 @@ from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
-df = pd.read_csv('C:\\Users\\itama\\OneDrive\\מסמכים\\לימודים\\תואר\\שנה ג\\סמסטר ב\\כרייה וניתוח נתונים מתקדם\\פרויקט\\flask מטלה 3 - אפליקציית\\flask app\\dataset.csv')
-dataset = pd.read_csv('C:\\Users\\itama\\OneDrive\\מסמכים\\לימודים\\תואר\\שנה ג\\סמסטר ב\\כרייה וניתוח נתונים מתקדם\\פרויקט\\flask מטלה 3 - אפליקציית\\flask app\\dataset.csv')
+df = pd.read_csv('')
+dataset = pd.read_csv('')
 
 def km(df):
     if 'Km' in df.columns:
