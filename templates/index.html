@@ -1,0 +1,150 @@
+
+
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>חיזוי מחיר רכב</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');
+            background-size: cover;
+            background-attachment: fixed;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        form {
+            display: grid;
+            gap: 15px;
+        }
+        label {
+            font-weight: bold;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type="submit"]:hover {
+            background-color: #2980b9;
+        }
+        #result {
+            margin-top: 20px;
+            text-align: center;
+        }
+        #predictionText {
+            font-size: 18px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>הזן פרטי רכב</h1>
+        <form id="predictForm" action="/predict" method="post">
+            <label for="manufactor">יצרן:</label>
+            <input type="text" id="manufactor" name="manufactor">
+            
+            <label for="model">דגם:</label>
+            <input type="text" id="model" name="model">
+            
+            <label for="Year">שנה:</label>
+            <input type="text" id="Year" name="Year">
+            
+            <label for="Hand">יד:</label>
+            <input type="text" id="Hand" name="Hand">
+            
+            <label for="Gear">תיבת הילוכים:</label>
+            <input type="text" id="Gear" name="Gear">
+            
+            <label for="capacity_Engine">נפח מנוע:</label>
+            <input type="text" id="capacity_Engine" name="capacity_Engine">
+            
+            <label for="Engine_type">סוג מנוע:</label>
+            <input type="text" id="Engine_type" name="Engine_type">
+            
+            <label for="Prev_ownership">בעלות קודמת:</label>
+            <input type="text" id="Prev_ownership" name="Prev_ownership">
+            
+            <label for="Curr_ownership">בעלות נוכחית:</label>
+            <input type="text" id="Curr_ownership" name="Curr_ownership">
+            
+            <label for="Pic_num">מספר תמונות:</label>
+            <input type="text" id="Pic_num" name="Pic_num">
+            
+            <label for="Description">תיאור:</label>
+            <input type="text" id="Description" name="Description">
+            
+            <label for="Color">צבע:</label>
+            <input type="text" id="Color" name="Color">
+            
+            <label for="is_reposted">האם פורסם מחדש:</label>
+            <input type="text" id="is_reposted" name="is_reposted">
+            
+            <input type="submit" value="חזה מחיר">
+        </form>
+        <div id="result">
+            <h2 id="predictionText"></h2>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            $('#predictForm').on('submit', function(e) {
+                e.preventDefault();
+                console.log("Form submitted");
+                var formData = $(this).serialize();
+                console.log("Form data:", formData);
+                $.ajax({
+                    type: 'POST',
+                    url: '/predict?nocache=' + new Date().getTime(),
+                    data: formData,
+                    cache: false,
+                    success: function(response) {
+                        console.log("Received response:", response);
+                        if(response.prediction_text) {
+                            $('#predictionText').text(response.prediction_text);
+                        } else if(response.error) {
+                            $('#predictionText').text("שגיאה: " + response.error);
+                        } else {
+                            $('#predictionText').text("תגובה בפורמט לא צפוי");
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.error('Error:', textStatus, errorThrown);
+                        $('#predictionText').text('אירעה שגיאה. אנא נסה שוב.');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
